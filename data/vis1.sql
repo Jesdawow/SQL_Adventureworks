@@ -1,10 +1,10 @@
 SELECT
-    pc.Name AS Category,
-    COUNT(DISTINCT p.ProductID) AS product_count
+    pc.Name AS CategoryName,
+    COUNT(DISTINCT p.ProductID) AS TotalProducts
 FROM Production.ProductCategory pc
 JOIN Production.ProductSubcategory psc
     ON pc.ProductCategoryID = psc.ProductCategoryID
 JOIN Production.Product p
     ON psc.ProductSubcategoryID = p.ProductSubcategoryID
 GROUP BY pc.Name
-ORDER BY product_count DESC;
+ORDER BY TotalProducts DESC;
