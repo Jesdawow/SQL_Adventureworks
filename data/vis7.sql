@@ -1,6 +1,7 @@
+-- Query to calculate average order value and number of orders by region and customer type
 WITH base AS (
     SELECT
-        st.Name AS Region,
+        CONCAT(st.Name, ' ', st.CountryRegionCode) AS Region,
         soh.SalesOrderID,
         soh.TotalDue,
         CASE
@@ -22,5 +23,4 @@ SELECT
     SUM(TotalDue) / NULLIF(COUNT(DISTINCT SalesOrderID), 0) AS AvgOrderValue,
     COUNT(DISTINCT SalesOrderID) AS Orders
 FROM base
-GROUP BY Region, CustomerType
-ORDER BY Region, CustomerType;
+GROUP BY Region, CustomerType;

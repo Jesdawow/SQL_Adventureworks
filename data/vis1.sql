@@ -1,3 +1,4 @@
+--- Query to count the number of products in each product category
 SELECT
     pc.Name AS CategoryName,
     COUNT(DISTINCT p.ProductID) AS TotalProducts

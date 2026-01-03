@@ -1,3 +1,4 @@
+-- Query to retrieve total sales amount per product category
 SELECT
     pc.Name AS CategoryName,
     SUM(sod.LineTotal) AS TotalSales

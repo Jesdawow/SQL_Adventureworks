@@ -1,3 +1,4 @@
+-- Query to retrieve total number of orders and total sales amount per year
 SELECT
     YEAR(OrderDate) AS OrderYear,
     COUNT(*) AS OrderCount,

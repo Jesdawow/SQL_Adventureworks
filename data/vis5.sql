@@ -1,3 +1,4 @@
+-- Query to retrieve the top 10 products by total sales amount
 SELECT TOP 10
     p.Name AS ProductName,
     SUM(sod.LineTotal) AS TotalSales
