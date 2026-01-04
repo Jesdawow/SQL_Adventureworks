@@ -1,18 +1,21 @@
--- Query to retrieve total sales amount by product category and sales territory
+-- Query to get total sales by region for the last 12 months with average order value
 SELECT
     CONCAT(st.Name, ' ', st.CountryRegionCode) AS Region,
-    pc.Name AS Category,
-    SUM(sod.LineTotal) AS TotalSales
-FROM Sales.SalesOrderDetail sod
-JOIN Sales.SalesOrderHeader soh
-    ON sod.SalesOrderID = soh.SalesOrderID
+    SUM(soh.TotalDue) AS TotalSales,
+    COUNT(DISTINCT soh.SalesOrderID) AS Orders,
+    SUM(soh.TotalDue) / NULLIF(COUNT(DISTINCT soh.SalesOrderID), 0) AS AvgOrderValue
+FROM Sales.SalesOrderHeader soh
 JOIN Sales.SalesTerritory st
     ON soh.TerritoryID = st.TerritoryID
-JOIN Production.Product p
-    ON sod.ProductID = p.ProductID
-JOIN Production.ProductSubcategory psc
-    ON p.ProductSubcategoryID = psc.ProductSubcategoryID
-JOIN Production.ProductCategory pc
-    ON psc.ProductCategoryID = pc.ProductCategoryID
-GROUP BY st.Name, st.CountryRegionCode, pc.Name
-ORDER BY Region, TotalSales DESC;
+WHERE soh.OrderDate >= DATEADD(
+    MONTH, 
+    -12, 
+    DATEADD(
+        MONTH, 
+        DATEDIFF(MONTH,0,(SELECT MAX(OrderDate) FROM Sales.SalesOrderHeader)),0
+    )
+)
+AND soh.OrderDate < DATEADD(
+    MONTH, DATEDIFF(MONTH,0,(SELECT MAX(OrderDate) FROM Sales.SalesOrderHeader)), 0)
+GROUP BY st.Name, st.CountryRegionCode
+ORDER BY TotalSales DESC;
